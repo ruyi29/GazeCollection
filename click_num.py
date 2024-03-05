@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 
 n = 20000               # 手动设置照片编号
@@ -79,6 +80,13 @@ if __name__ == '__main__':
     cv2.namedWindow('Screen')  # 创建窗口
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
     event_begin = 1  # 保证连续两次鼠标出发事件不会出错
+
+    # 检查文件是否存在
+    if not os.path.exists('data/coordinate.txt'):
+        # 如果不存在，则创建
+        os.makedirs('data', exist_ok=True)
+        with open('data/coordinate.txt', 'w') as f:
+            pass
 
     # 初始化图像
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
