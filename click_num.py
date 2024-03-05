@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-n = 20000               # 手动设置照片编号
+n = 20               # 手动设置照片编号
 subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
@@ -17,7 +17,17 @@ def ShowInfo():
     else:
         cv2.putText(img, "Not_Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
     
+
+def CreateFile():
+    if not os.path.exists('data'):
+        os.makedirs('data', exist_ok=True)
+
+    if not os.path.exists('data/coordinate.txt'):
+        with open('data/coordinate.txt', 'w') as f:
+            pass
     
+    if not os.path.exists('data/Photo'):
+        os.makedirs('data/Photo', exist_ok=True)
 
 
 # 保存数据
@@ -81,12 +91,7 @@ if __name__ == '__main__':
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
     event_begin = 1  # 保证连续两次鼠标出发事件不会出错
 
-    # 检查文件是否存在
-    if not os.path.exists('data/coordinate.txt'):
-        # 如果不存在，则创建
-        os.makedirs('data', exist_ok=True)
-        with open('data/coordinate.txt', 'w') as f:
-            pass
+    CreateFile()
 
     # 初始化图像
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
@@ -95,8 +100,8 @@ if __name__ == '__main__':
     disappear = 0
     # X = np.random.randint(0, width)  # 生成随机坐标
     # Y = np.random.randint(0, height)
-    X = 1250
-    Y = 715
+    X = 1300
+    Y = 720
     radius = RADIUS_MAX  # 圆点半径
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
