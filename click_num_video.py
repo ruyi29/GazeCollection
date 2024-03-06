@@ -29,6 +29,7 @@ def InitDraw():
     speed = 0
     disappear = 0
     event_begin = 1  # 保证连续两次鼠标出发事件不会出错
+    #cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 200, height // 2 + 50), (255, 255, 255), -1)
     X = np.random.randint(5, width - 40) 
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
@@ -88,9 +89,10 @@ def mouse_callback(event, x, y, flags, userdata):
             if key == ord(str(num)):  # 按’空格‘退出
                 SaveData()
             elif k != ord(' '):
-                cv2.putText(img, 'Wrong Choose', (width / 2, height / 2), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-                cv2.waitkey(300)
-                # cv2.rectangle(img, (0, 0), (width / 2 - 100, height / 2 - 100), (0, 0, 0), -1)
+                cv2.putText(img, 'Wrong Choose', (width // 2 - 150, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+                cv2.imshow('Screen', img)
+                cv2.waitKey(2000)  # 等待（）毫秒
+                cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 200, height // 2 + 50), (255, 255, 255), -1)
 
         InitDraw()
 
