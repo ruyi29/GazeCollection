@@ -22,21 +22,21 @@ def CreateFile():
         os.makedirs('data/Photo', exist_ok=True)
 
 
-# 初始化信息
+# 初始化圆点和数据
 def InitDraw():
     global n, X, Y, radius, speed, F, disappear, event_begin
     F = -1
     speed = 0
     disappear = 0
     event_begin = 1  # 保证连续两次鼠标出发事件不会出错
-    X = np.random.randint(5, width - 40)  # 生成随机坐标
+    X = np.random.randint(5, width - 40) 
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
     cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
     ShowInfo()
-    cv2.imshow('Screen', img)  # 显示图像
+    cv2.imshow('Screen', img) 
 
 # 信息展示
 def ShowInfo():
@@ -67,7 +67,6 @@ def mouse_callback(event, x, y, flags, userdata):
     if event == cv2.EVENT_LBUTTONDOWN and event_begin == 1:    # 拍摄照片
         global n, X, Y, radius, speed, F
         event_begin = 0
-        #ret, frame = cap.read()
         cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
 
         if n % 21 == 0 or n % 22 == 0:
@@ -101,7 +100,7 @@ if __name__ == '__main__':
     cv2.namedWindow('Screen')  # 创建窗口
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
-    count = 0
+    count = 0   # 记录当前是第几帧
     CreateFile()
     InitDraw()
     
@@ -127,7 +126,7 @@ if __name__ == '__main__':
                     F = F * -1
                     radius = radius + F
 
-        # 停留时间过长圆点会更新
+        # 停留时间过长圆点更新
         if disappear > 1000:   
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
             InitDraw()

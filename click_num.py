@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-n = 20               # 手动设置照片编号
+n = 20                  # 手动设置照片编号
 subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
@@ -23,7 +23,7 @@ def CreateFile():
         os.makedirs('data/Photo', exist_ok=True)
 
 
-# 初始化信息
+# 初始化圆点和数据
 def InitDraw():
     global n, X, Y, radius, speed, F, disappear, event_begin
     F = -1
@@ -68,7 +68,6 @@ def mouse_callback(event, x, y, flags, userdata):
     if event == cv2.EVENT_LBUTTONDOWN and event_begin == 1:    # 拍摄照片
         global n, X, Y, radius, speed, F
         event_begin = 0
-        #ret, frame = cap.read()
         cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
 
         if n % 21 == 0 or n % 22 == 0:
