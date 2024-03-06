@@ -30,9 +30,10 @@ def InitDraw():
     speed = 0
     disappear = 0
     event_begin = 1  # 保证连续两次鼠标出发事件不会出错
-    X = np.random.randint(0, width)  # 生成随机坐标
-    Y = np.random.randint(0, height)
+    X = np.random.randint(5, width - 40)  # 生成随机坐标
+    Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
+    cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
     ShowInfo()
@@ -45,7 +46,7 @@ def ShowInfo():
     if n % 2 == 0:
         cv2.putText(img, "Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
     else:
-        cv2.putText(img, "Not_Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+        cv2.putText(img, "NotUpright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
 
 # 保存数据
@@ -81,6 +82,7 @@ def mouse_callback(event, x, y, flags, userdata):
             cv2.imshow('Screen', img)
             cv2.waitKey(300)
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
+            ShowInfo()
             cv2.imshow('Screen', img)
             
             # 如果选择了正确的选项
