@@ -8,16 +8,9 @@ subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
 RADIUS_MAX = 25         # 圆点最大半径
-
-def ShowInfo():
-    global n
-    cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-    if n % 2 == 0:
-        cv2.putText(img, "Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-    else:
-        cv2.putText(img, "Not_Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
     
 
+# 创建文件夹
 def CreateFile():
     if not os.path.exists('data'):
         os.makedirs('data', exist_ok=True)
@@ -28,6 +21,31 @@ def CreateFile():
     
     if not os.path.exists('data/Photo'):
         os.makedirs('data/Photo', exist_ok=True)
+
+
+# 初始化信息
+def InitDraw():
+    global n, X, Y, radius, speed, F, disappear, event_begin
+    F = -1
+    speed = 0
+    disappear = 0
+    event_begin = 1  # 保证连续两次鼠标出发事件不会出错
+    X = np.random.randint(0, width)  # 生成随机坐标
+    Y = np.random.randint(0, height)
+    radius = RADIUS_MAX  # 圆点半径
+    cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
+    cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
+    ShowInfo()
+    cv2.imshow('Screen', img)  # 显示图像
+
+# 信息展示
+def ShowInfo():
+    global n
+    cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+    if n % 2 == 0:
+        cv2.putText(img, "Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+    else:
+        cv2.putText(img, "Not_Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
 
 # 保存数据
@@ -70,43 +88,17 @@ def mouse_callback(event, x, y, flags, userdata):
             if key == ord(str(num)):  # 按’空格‘退出
                 SaveData()
 
-        event_begin = 1
-        F = -1
-        speed = 0
-        disappear = 0
-        X = np.random.randint(0, width)  # 生成随机坐标
-        Y = np.random.randint(0, height)
-        radius = RADIUS_MAX  # 圆点半径
-        cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
-        cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
-        ShowInfo()
-        cv2.imshow('Screen', img)  # 显示图像
+        InitDraw()
 
 
 if __name__ == '__main__':
-    # 初始化窗口
     print("Let's start!")
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('Screen')  # 创建窗口
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
-    event_begin = 1  # 保证连续两次鼠标出发事件不会出错
-
-    CreateFile()
-
-    # 初始化图像
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
-    F = -1
-    speed = 0
-    disappear = 0
-    # X = np.random.randint(0, width)  # 生成随机坐标
-    # Y = np.random.randint(0, height)
-    X = 1300
-    Y = 720
-    radius = RADIUS_MAX  # 圆点半径
-    cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
-    cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
-    ShowInfo()
-    cv2.imshow('Screen', img)  # 显示图像
+    CreateFile()
+    InitDraw()
     
     while True:
         ret, frame = cap.read()
@@ -127,25 +119,16 @@ if __name__ == '__main__':
                 if radius == 5 or radius == RADIUS_MAX:   # 圆点变小
                     F = F * -1
                     radius = radius + F
-        if disappear > 10000:   # 停留时间过长圆点会更新
-            event_begin = 1
-            F = -1
-            speed = 0
-            disappear = 0
-            cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
-            X = np.random.randint(0, width)  # 生成随机坐标
-            Y = np.random.randint(0, height)
-            radius = RADIUS_MAX  # 圆点半径
-            cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
-            cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
-            ShowInfo()
-            cv2.imshow('Screen', img)
 
+        # 停留时间过长圆点会更新
+        if disappear > 10000:   
+            cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
+            InitDraw()
+
+        # 按’空格‘退出
         k = cv2.waitKey(1) & 0xFF
-        if k == ord(' '):  # 按’空格‘退出
+        if k == ord(' '):  
             break
-        # elif cv2.getWindowProperty('Capture', 0) == -1:  # 使窗口可以正常关闭
-        #     break
 
     cap.release()
     cv2.destroyAllWindows()
