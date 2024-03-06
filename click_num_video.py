@@ -87,6 +87,10 @@ def mouse_callback(event, x, y, flags, userdata):
             key = cv2.waitKey(0) & 0xFF
             if key == ord(str(num)):  # 按’空格‘退出
                 SaveData()
+            elif k != ord(' '):
+                cv2.putText(img, 'Wrong Choose', (width / 2, height / 2), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+                cv2.waitkey(300)
+                # cv2.rectangle(img, (0, 0), (width / 2 - 100, height / 2 - 100), (0, 0, 0), -1)
 
         InitDraw()
 
