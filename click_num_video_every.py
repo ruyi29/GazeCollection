@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 
-n = 20                  # 手动设置照片编号
+light_condition = 1     # 手动设置光照情况编号
 subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
@@ -33,6 +33,7 @@ def InitDraw():
     X = np.random.randint(5, width - 40) 
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
+    cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 200, height // 2 + 50), (255, 255, 255), -1)
     cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
@@ -44,10 +45,6 @@ def InitDraw():
 def ShowInfo():
     global n
     cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-    if n % 2 == 0:
-        cv2.putText(img, "Upright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-    else:
-        cv2.putText(img, "NotUpright", (5, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
 
 # 保存数据
@@ -55,12 +52,20 @@ def SaveData():
     global n, X, Y, count
     cv2.imwrite("./data/Photo/" + str(n) + '.jpg', frame)
     print("save " + str(n) + ".jpg", end = ' ')     # 提示拍摄成功用的
-    data = str(n) + ',' + subject + ',' + str(count) + ',' + str(n) + '.jpg,' + str(X) + ',' + str(Y) + '\n'
+    data = str(n) + ',' + subject + ','  + str(light_condition) + ',' + str(count) + ',' + str(n) + '.jpg,' + str(X) + ',' + str(Y) + ',' + '\n'
     with open('data/coordinate.txt', 'a') as f:
         f.write(data)
     print(f'({X}, {Y})')
     n += 1
 
+
+# 流程引导
+def Guide():
+    if n % 22 == 0:
+        cv2.putText(img, 'Please choose the number you see', (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+        cv2.putText(img, 'Please choose the number you see', (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+        cv2.imshow('Screen', img)
+    
 
 # 回调函数：鼠标点击输出点击的坐标
 #（事件（鼠标移动、左键、右键），横坐标，纵坐标，组合键，setMouseCallback的userdata用于传参）
@@ -93,15 +98,15 @@ def mouse_callback(event, x, y, flags, userdata):
                 cv2.putText(img, 'Wrong Choose', (width // 2 - 150, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
                 cv2.imshow('Screen', img)
                 cv2.waitKey(1500)  # 等待（）毫秒
-                cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 200, height // 2 + 50), (255, 255, 255), -1)
 
         InitDraw()
 
 
 if __name__ == '__main__':
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video = cv2.VideoWriter('video.avi', fourcc, 30.0, (640, 480))
+    video = cv2.VideoWriter(str(light_condition) + '.avi', fourcc, 30.0, (640, 480))
 
+    n = (light_condition - 1) * 22 + 1
     print("Let's start!")
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('Screen')  # 创建窗口
