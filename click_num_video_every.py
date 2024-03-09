@@ -33,8 +33,9 @@ def InitDraw():
     X = np.random.randint(5, width - 40) 
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
-    cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 200, height // 2 + 50), (255, 255, 255), -1)
-    cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
+    cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
+    # cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 300, height // 2 + 50), (255, 255, 255), -1)
+    # cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
     ShowInfo()
@@ -61,10 +62,20 @@ def SaveData():
 
 # 流程引导
 def Guide():
-    if n % 22 == 0:
-        cv2.putText(img, 'Please choose the number you see', (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
-        cv2.putText(img, 'Please choose the number you see', (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
-        cv2.imshow('Screen', img)
+    # 坐姿端正
+    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+
+    # 设备距离
+    
+    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+
+    # 设备倾角
+    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+    
+    cv2.imshow('Screen', img)
     
 
 # 回调函数：鼠标点击输出点击的坐标
@@ -95,23 +106,27 @@ def mouse_callback(event, x, y, flags, userdata):
             if key == ord(str(num)):  # 按’空格‘退出
                 SaveData()
             elif k != ord(' '):
-                cv2.putText(img, 'Wrong Choose', (width // 2 - 150, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+                cv2.putText(img, 'Wrong Choose', (width // 2 - 150, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
                 cv2.imshow('Screen', img)
                 cv2.waitKey(1500)  # 等待（）毫秒
 
         InitDraw()
 
-
+# TODO：添加字典，每次开始的时候提示光照情况  ////  中间流程的提示 
 if __name__ == '__main__':
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     video = cv2.VideoWriter(str(light_condition) + '.avi', fourcc, 30.0, (640, 480))
-
     n = (light_condition - 1) * 22 + 1
-    print("Let's start!")
+    print("Start condition" + str(light_condition))
     cap = cv2.VideoCapture(0)
     cv2.namedWindow('Screen')  # 创建窗口
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
+    cv2.putText(img, "Start condition" + str(light_condition), 
+                (width // 2 - 120, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+    cv2.imshow('Screen', img)
+    cv2.waitKey(1500)
+    Guide()
     count = 0   # 记录当前是第几帧
     CreateFile()
     InitDraw()
