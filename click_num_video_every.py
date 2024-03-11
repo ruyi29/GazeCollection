@@ -22,6 +22,9 @@ def CreateFile():
     if not os.path.exists('data/Photo'):
         os.makedirs('data/Photo', exist_ok=True)
 
+    if not os.path.exists('data/Video'):
+        os.makedirs('data/Video', exist_ok=True)
+
 
 # 初始化圆点和数据
 def InitDraw():
@@ -114,8 +117,9 @@ def mouse_callback(event, x, y, flags, userdata):
 
 # TODO：添加字典，每次开始的时候提示光照情况  ////  中间流程的提示 
 if __name__ == '__main__':
+    LIGHT_CONDITION = ['Daytime_Inside_FrontLight', 'Daytime_Inside_SideLight', ]
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video = cv2.VideoWriter(str(light_condition) + '.avi', fourcc, 30.0, (640, 480))
+    video = cv2.VideoWriter('./data/Video/' + str(light_condition) + '.avi', fourcc, 30.0, (640, 480))
     n = (light_condition - 1) * 22 + 1
     print("Start condition" + str(light_condition))
     cap = cv2.VideoCapture(0)

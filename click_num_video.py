@@ -100,7 +100,7 @@ def mouse_callback(event, x, y, flags, userdata):
 
 if __name__ == '__main__':
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    video = cv2.VideoWriter('video.avi', fourcc, 30.0, (640, 480))
+    video = cv2.VideoWriter('./data/Video/'+'video.avi', fourcc, 30.0, (640, 480))
 
     print("Let's start!")
     cap = cv2.VideoCapture(0)
