@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import os
+import sys
 
 
 light_condition = 1     # 手动设置光照情况编号
@@ -26,6 +27,19 @@ def CreateFile():
         os.makedirs('data/Video', exist_ok=True)
 
 
+# 按 enter 键继续, 空格键退出
+def PressEnter():
+    cv2.putText(img, 'Press Enter to Continue', 
+                (width // 2 - 250, height // 2 + 100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+    cv2.imshow('Screen', img)
+    while True:
+        k = cv2.waitKey(0) & 0xFF
+        if k == 13:
+            break
+        if k == ord(' '):  
+            sys.exit()
+
+
 # 初始化圆点和数据
 def InitDraw():
     global n, X, Y, radius, speed, F, disappear, event_begin
@@ -37,8 +51,6 @@ def InitDraw():
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
-    # cv2.rectangle(img, (width // 2 - 200, height // 2 - 100), (width // 2 + 300, height // 2 + 50), (255, 255, 255), -1)
-    # cv2.rectangle(img, (0, 0), (200, 100), (255, 255, 255), -1)
     cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
     cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
     ShowInfo()
@@ -117,22 +129,37 @@ def mouse_callback(event, x, y, flags, userdata):
 
 # TODO：添加字典，每次开始的时候提示光照情况  ////  中间流程的提示 
 if __name__ == '__main__':
-    LIGHT_CONDITION = ['Daytime_Inside_FrontLight', 'Daytime_Inside_SideLight', ]
+
+    # 相机
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     video = cv2.VideoWriter('./data/Video/' + str(light_condition) + '.avi', fourcc, 30.0, (640, 480))
-    n = (light_condition - 1) * 22 + 1
-    print("Start condition" + str(light_condition))
     cap = cv2.VideoCapture(0)
+
+    # 窗口
     cv2.namedWindow('Screen')  # 创建窗口
     cv2.setMouseCallback('Screen', mouse_callback)  # 将回调函数绑定到窗口
     img = np.ones((height, width, 3), dtype = np.uint8) * 255  # 创建白色的图像
-    cv2.putText(img, "Start condition" + str(light_condition), 
-                (width // 2 - 120, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+
+    # 文件夹
+    CreateFile()
+    
+    # 提示当前光照情况
+    LIGHT_CONDITION = ['Daytime_Inside_FrontLight', 'Daytime_Inside_SideLight', 'Daytime_Inside_BackLight', 
+                       'Daytime_Outside_AndLight', 'Night_Inside_TopLight', 'Night_Inside_ScreenLight', 
+                       'Night_TableLamp_FrontLight', 'Night_TableLamp_SideLight', 'Night_Inside_OutsideLight']
+    print(LIGHT_CONDITION[light_condition - 1] + ' Start')
+    cv2.putText(img, LIGHT_CONDITION[light_condition - 1] + ' Start', 
+                (width // 2 - 250, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+    cv2.imshow('Screen', img)
+    PressEnter()
+    
+    # Guide()
     cv2.imshow('Screen', img)
     cv2.waitKey(1500)
-    Guide()
+
+    # 初始化数据
+    n = (light_condition - 1) * 22 + 1
     count = 0   # 记录当前是第几帧
-    CreateFile()
     InitDraw()
     
     while True:
