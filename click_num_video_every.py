@@ -4,7 +4,7 @@ import os
 import sys
 
 
-light_condition = 1     # 手动设置光照情况编号
+light_condition = 5     # 手动设置光照情况编号
 subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
@@ -72,22 +72,34 @@ def SaveData():
     with open('data/coordinate.txt', 'a') as f:
         f.write(data)
     print(f'({X}, {Y})')
+
+    # 具体情况提示
+    if n % 22 == 0:
+        Guide()
+
     n += 1
 
 
 # 流程引导
 def Guide():
     # 坐姿端正
-    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    text = 'Sit Upright' if (n / 22) % 2 == 0 else 'Not Upright'
     cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
-
-    # 设备距离
     
-    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    # 设备距离
+    text = 'Distance(70cm+)'
+    if (n / 22) % 2 == 1:
+        text = 'Distance(45-48cm)'
+    elif (n / 22) % 2 == 1:
+        text = 'Distance(32-35cm)'
     cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
-
+    
     # 设备倾角
-    text = 'Sit Upright' if light_condition % 2 == 1 else 'Not Upright'
+    text = 'Angle(45 degrees)'
+    if (n / 22) % 2 == 1:
+        text = 'Angle(30 degrees)'
+    elif (n / 22) % 2 == 1:
+        text = 'Angle(15 degrees)'
     cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
     
     cv2.imshow('Screen', img)
@@ -127,6 +139,7 @@ def mouse_callback(event, x, y, flags, userdata):
 
         InitDraw()
 
+
 # TODO：添加字典，每次开始的时候提示光照情况  ////  中间流程的提示 
 if __name__ == '__main__':
 
@@ -153,7 +166,8 @@ if __name__ == '__main__':
     cv2.imshow('Screen', img)
     PressEnter()
     
-    # Guide()
+    Guide()
+    PressEnter()
     cv2.imshow('Screen', img)
     cv2.waitKey(1500)
 
