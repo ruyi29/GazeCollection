@@ -30,7 +30,7 @@ def CreateFile():
 # 按 enter 键继续, 空格键退出
 def PressEnter():
     cv2.putText(img, 'Press Enter to Continue', 
-                (width // 2 - 250, height // 2 + 100), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+                (width // 4, height // 3 * 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
     cv2.imshow('Screen', img)
     while True:
         k = cv2.waitKey(0) & 0xFF
@@ -57,12 +57,6 @@ def InitDraw():
     cv2.imshow('Screen', img) 
 
 
-# 信息展示
-def ShowInfo():
-    global n
-    cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-
-
 # 保存数据
 def SaveData():
     global n, X, Y, count
@@ -82,25 +76,29 @@ def SaveData():
 
 # 流程引导
 def Guide():
+    global n
+    case_num = n // 22 + 1   # 具体情况编号
     # 坐姿端正
-    text = 'Sit Upright' if (n / 22) % 2 == 0 else 'Not Upright'
-    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+    text = 'Sit_Upright' if case_num % 2 == 1 else 'Not_Upright'
+    cv2.putText(img, text, (width // 10, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
     
     # 设备距离
     text = 'Distance(70cm+)'
-    if (n / 22) % 2 == 1:
+    t = (case_num - 1) // 6 % 3
+    if t == 1:
         text = 'Distance(45-48cm)'
-    elif (n / 22) % 2 == 1:
+    elif t == 2:
         text = 'Distance(32-35cm)'
-    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+    cv2.putText(img, text, (width // 3, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
     
     # 设备倾角
-    text = 'Angle(45 degrees)'
-    if (n / 22) % 2 == 1:
-        text = 'Angle(30 degrees)'
-    elif (n / 22) % 2 == 1:
-        text = 'Angle(15 degrees)'
-    cv2.putText(img, text, (width // 2 - 200, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
+    text = 'Angle(45)'
+    t = (case_num - 1) // 2 % 3
+    if t == 1:
+        text = 'Angle(30)'
+    elif t == 2:
+        text = 'Angle(15)'
+    cv2.putText(img, text, (width // 4 * 3, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
     
     cv2.imshow('Screen', img)
     
@@ -125,7 +123,7 @@ def mouse_callback(event, x, y, flags, userdata):
             cv2.imshow('Screen', img)
             cv2.waitKey(300)
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
-            ShowInfo()
+            cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
             cv2.imshow('Screen', img)
             
             # 如果选择了正确的选项
@@ -140,7 +138,7 @@ def mouse_callback(event, x, y, flags, userdata):
         InitDraw()
 
 
-# TODO：添加字典，每次开始的时候提示光照情况  ////  中间流程的提示 
+# TODO: 看屏幕外时的提示
 if __name__ == '__main__':
 
     # 相机
@@ -162,17 +160,18 @@ if __name__ == '__main__':
                        'Night_TableLamp_FrontLight', 'Night_TableLamp_SideLight', 'Night_Inside_OutsideLight']
     print(LIGHT_CONDITION[light_condition - 1] + ' Start')
     cv2.putText(img, LIGHT_CONDITION[light_condition - 1] + ' Start', 
-                (width // 2 - 250, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
+                (width // 4, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 3)
     cv2.imshow('Screen', img)
     PressEnter()
     
+    n = (light_condition - 1) * 22 + 1
+    cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
     Guide()
     PressEnter()
     cv2.imshow('Screen', img)
     cv2.waitKey(1500)
 
-    # 初始化数据
-    n = (light_condition - 1) * 22 + 1
+    # 初始化
     count = 0   # 记录当前是第几帧
     InitDraw()
     
@@ -191,7 +190,7 @@ if __name__ == '__main__':
                 cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
                 cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
                 cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
-                ShowInfo()
+                cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
                 cv2.imshow('Screen', img)
                 speed = 0
                 if radius == 5 or radius == RADIUS_MAX:   # 圆点变小
@@ -203,7 +202,7 @@ if __name__ == '__main__':
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
             InitDraw()
 
-        # 按’空格‘退出
+        # 按'空格'退出
         k = cv2.waitKey(1) & 0xFF
         if k == ord(' '):  
             break
