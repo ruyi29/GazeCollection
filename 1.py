@@ -75,13 +75,6 @@ def SaveData():
         Guide()
     n += 1
 
-    # 结束时
-    if n == light_condition * 18 * 22 + 1:
-        cv2.putText(img, 'Finish', (width // 2 - 50, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
-        cv2.imshow('Screen', img)
-        cv2.waitKey(1500)
-        sys.exit()
-
 
 # 流程引导
 def Guide():
