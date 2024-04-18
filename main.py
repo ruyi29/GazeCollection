@@ -182,8 +182,6 @@ if __name__ == '__main__':
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
     Guide()
     PressEnter()
-    cv2.imshow('Screen', img)
-    cv2.waitKey(1500)
 
     # 初始化
     count = 0   # 记录当前是第几帧
