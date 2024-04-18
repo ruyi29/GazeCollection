@@ -70,17 +70,23 @@ def SaveData():
         f.write(data)
     print(f'({X}, {Y})')
 
-    # 具体情况提示
-    if n % 22 == 0:
-        Guide()
-    n += 1
-
     # 结束时
-    if n == light_condition * 18 * 22 + 1:
+    if n == light_condition * 12 * 22:
+        cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
         cv2.putText(img, 'Finish', (width // 2 - 50, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
         cv2.imshow('Screen', img)
-        cv2.waitKey(1500)
+        PressEnter()
         sys.exit()
+
+    # 具体情况提示
+    if n % 22 == 0:
+        cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
+        Guide()
+        PressEnter()
+        
+    n += 1
+
+    
 
 
 # 流程引导
@@ -93,7 +99,7 @@ def Guide():
     
     # 设备距离
     text = 'Distance(70cm+)'
-    t = (case_num - 1) // 6 % 3
+    t = (case_num - 1) // 4 % 3
     if t == 1:
         text = 'Distance(45-48cm)'
     elif t == 2:
@@ -101,14 +107,12 @@ def Guide():
     cv2.putText(img, text, (width // 3, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
     
     # 设备倾角
-    text = 'Angle(45)'
-    t = (case_num - 1) // 2 % 3
+    text = 'Angle(30)'
+    t = (case_num - 1) // 2 % 2
     if t == 1:
-        text = 'Angle(30)'
-    elif t == 2:
         text = 'Angle(15)'
     cv2.putText(img, text, (width // 4 * 3, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 2)
-    
+
     cv2.imshow('Screen', img)
     
 
@@ -126,7 +130,7 @@ def mouse_callback(event, x, y, flags, userdata):
             X , Y = -1, -1
             SaveData()
         else:
-            # 画布中生成数字
+            # 画布中生成随机数
             num = np.random.randint(1, 5)
             cv2.putText(img, str(num), (X - 5, Y + 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
             cv2.imshow('Screen', img)
@@ -189,7 +193,7 @@ if __name__ == '__main__':
         count += 1
         ret, frame = cap.read()
         video.write(frame)
-        # cv2.imshow("Capture", frame)
+        cv2.imshow("Capture", frame)
 
         if not(n % 21 == 0) and not(n % 22 == 0):
             # 圆点变化 

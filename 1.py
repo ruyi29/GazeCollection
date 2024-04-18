@@ -4,7 +4,7 @@ import os
 import sys
 
 
-light_condition = 1     # 手动设置光照情况编号
+light_condition = 8     # 手动设置光照情况编号
 subject = 'Chen'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
@@ -51,7 +51,8 @@ def InitDraw():
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
-    if n % 21 == 0 or n % 22 == 0:
+    #if n % 21 == 0 or n % 22 == 0:
+    if 0:
         cv2.putText(img, 'Please look out of the screen and click', (width // 8, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
     else:
         cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
@@ -65,15 +66,25 @@ def SaveData():
     global n, X, Y, count
     cv2.imwrite("./data/Photo/" + str(n) + '.jpg', frame)
     print("save " + str(n) + ".jpg", end = ' ')     # 提示拍摄成功用的
+    if n % 2 == 0:
+        X = -1
+        Y = -1
     data = str(n) + ',' + subject + ','  + str(light_condition) + ',' + str(count) + ',' + str(n) + '.jpg,' + str(X) + ',' + str(Y) + ',' + '\n'
     with open('data/coordinate.txt', 'a') as f:
         f.write(data)
     print(f'({X}, {Y})')
 
     # 具体情况提示
-    if n % 22 == 0:
-        Guide()
+    # if n % 22 == 0:
+    #     Guide()
     n += 1
+
+    # # 结束时
+    # if n == light_condition * 18 * 22 + 1:
+    #     cv2.putText(img, 'Finish', (width // 2 - 50, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
+    #     cv2.imshow('Screen', img)
+    #     cv2.waitKey(1500)
+    #     sys.exit()
 
 
 # 流程引导
@@ -114,7 +125,8 @@ def mouse_callback(event, x, y, flags, userdata):
         event_begin = 0
         cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
 
-        if n % 21 == 0 or n % 22 == 0:
+        #if n % 21 == 0 or n % 22 == 0:
+        if 0:
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
             X , Y = -1, -1
             SaveData()
@@ -130,7 +142,7 @@ def mouse_callback(event, x, y, flags, userdata):
             
             # 如果选择了正确的选项
             k = cv2.waitKey(0) & 0xFF
-            if k == ord(str(num)):  # 按’空格‘退出
+            if k != ord(' '):  # 按’空格‘退出
                 SaveData()
             elif k == ord(' '):  
                 sys.exit()
@@ -167,9 +179,10 @@ if __name__ == '__main__':
     cv2.imshow('Screen', img)
     PressEnter()
     
-    n = (light_condition - 1) * 22 + 1  # 第 n 张照片
+    #n = (light_condition - 1) * 22 + 1  # 第 n 张照片
+    n=321
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
-    Guide()
+    #Guide()
     PressEnter()
     cv2.imshow('Screen', img)
     cv2.waitKey(1500)
@@ -182,29 +195,28 @@ if __name__ == '__main__':
         count += 1
         ret, frame = cap.read()
         video.write(frame)
-        # cv2.imshow("Capture", frame)
+        #cv2.imshow("Capture", frame)
 
-        if not(n % 21 == 0) and not(n % 22 == 0):
-            # 圆点变化 
-            speed = speed + 1
-            disappear = disappear + 1
-            if radius > 5:   # 圆点变小
-                if speed == 1:
-                    radius = radius + F
-                    cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
-                    cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
-                    cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
-                    cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-                    cv2.imshow('Screen', img)
-                    speed = 0
-                    if radius == 5 or radius == RADIUS_MAX:   # 圆点变小
-                        F = F * -1
-                        radius = radius + F
-
-            # 停留时间过长圆点更新
-            if disappear > 1000:   
+        # 圆点变化 
+        speed = speed + 1
+        disappear = disappear + 1
+        if radius > 5:   # 圆点变小
+            if speed == 1:
+                radius = radius + F
                 cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
-                InitDraw()
+                cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
+                cv2.circle(img, (X, Y), 5, (0, 0, 0), -1)
+                cv2.putText(img, str(n), (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+                cv2.imshow('Screen', img)
+                speed = 0
+                if radius == 5 or radius == RADIUS_MAX:   # 圆点变小
+                    F = F * -1
+                    radius = radius + F
+
+        # 停留时间过长圆点更新
+        if disappear > 1000:   
+            cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
+            InitDraw()
 
         # 按'空格'退出
         k = cv2.waitKey(1) & 0xFF
