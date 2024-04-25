@@ -51,7 +51,7 @@ def InitDraw():
     Y = np.random.randint(5, height - 20)
     radius = RADIUS_MAX  # 圆点半径
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
-    if n % 21 == 0 or n % 22 == 0:
+    if n % 22 == 21 or n % 22 == 0:
         cv2.putText(img, 'Please look out of the screen and click', (width // 8, height // 2), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 0), 4)
     else:
         cv2.circle(img, (X, Y), radius, (0, 0, 255), -1)
@@ -125,7 +125,7 @@ def mouse_callback(event, x, y, flags, userdata):
         event_begin = 0
         cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
 
-        if n % 21 == 0 or n % 22 == 0:
+        if n % 22 == 21 or n % 22 == 0:
             cv2.circle(img, (X, Y), RADIUS_MAX, (255, 255, 255), -1)
             X , Y = -1, -1
             SaveData()
@@ -193,7 +193,7 @@ if __name__ == '__main__':
         video.write(frame)
         cv2.imshow("Capture", frame)
 
-        if not(n % 21 == 0) and not(n % 22 == 0):
+        if not(n % 22 == 21) and not(n % 22 == 0):
             # 圆点变化 
             speed = speed + 1
             disappear = disappear + 1

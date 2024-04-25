@@ -1,3 +1,4 @@
 data/Photo/
 data/*.txt
 *.avi
+demo/*
