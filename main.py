@@ -4,8 +4,8 @@ import os
 import sys
 
 
-light_condition = 1     # 手动设置光照情况编号
-subject = 'Chen'        # 填入你的编号
+light_condition = 7     # 手动设置光照情况编号
+subject = 'Chen_glass'        # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
 RADIUS_MAX = 25         # 圆点最大半径
@@ -178,7 +178,7 @@ if __name__ == '__main__':
     cv2.imshow('Screen', img)
     PressEnter()
     
-    n = (light_condition - 1) * 22 + 1  # 第 n 张照片
+    n = (light_condition - 1) * 22 * 12 + 1  # 第 n 张照片
     cv2.rectangle(img, (0, 0), (width, height), (255, 255, 255), -1)
     Guide()
     PressEnter()
