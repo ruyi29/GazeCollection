@@ -5,7 +5,7 @@ import sys
 
 
 light_condition = 7     # 手动设置光照情况编号
-subject = 'Chen_glass'        # 填入你的编号
+subject = 'Chen_glass'  # 填入你的编号
 width = 1300            # 指定窗口宽度
 height = 720            # 指定窗口高度
 RADIUS_MAX = 25         # 圆点最大半径

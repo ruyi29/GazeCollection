@@ -2,3 +2,6 @@ data/Photo/
 data/*.txt
 *.avi
 demo/*
+documents/record/*
+Camera_Calibration/images/*.jpj
+Camera_Calibration/calibrations.txt
