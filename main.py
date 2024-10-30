@@ -169,7 +169,7 @@ if __name__ == '__main__':
     CreateFile()
     
     # 提示当前光照情况
-    LIGHT_CONDITION = ['Daytime_Inside_FrontLight', 'Daytime_Inside_SideLight', 'Daytime_Inside_BackLight', 
+    LIGHT_CONDITION = ['Daytime_Inside_FrontLight', 'Daytime_Inside_BackLight', 'Daytime_Inside_SideLight', 
                        'Daytime_Outside_AndLight', 'Night_Inside_TopLight', 'Night_Inside_ScreenLight', 
                        'Night_TableLamp_FrontLight', 'Night_TableLamp_SideLight', 'Night_Inside_OutsideLight']
     print(LIGHT_CONDITION[light_condition - 1] + ' Start')

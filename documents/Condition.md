@@ -9,8 +9,8 @@
 |光照编号|光照情况|英文|
 |:---:|:---:|:---:|
 |1|白天室内正面光|Daytime_Inside_FrontLight|
-|2|白天室内背面光|Daytime_Inside_SideLight|
-|3|白天室内侧面光|Daytime_Inside_BackLight|
+|2|白天室内背面光|Daytime_Inside_BackLight|
+|3|白天室内侧面光|Daytime_Inside_SideLight|
 |4|白天室外任意光|Daytime_Outside_AndLight|
 |5|晚上室内顶灯光|Night_Inside_TopLight|
 |6|黑暗环境屏幕光|Night_Inside_ScreenLight|
